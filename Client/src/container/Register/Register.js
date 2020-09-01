@@ -1,9 +1,7 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
-
+import {Form, Button,Alert} from "react-bootstrap";
 
 class Login extends Component {
   state = {
@@ -21,8 +19,7 @@ class Login extends Component {
 
   registerHandler = (event) => {
     event.preventDefault();
-
-    if(this.state.password !== this.state.confirm_password){
+    if(this.state.password !== this.state.confirmPassword){
       return this.setState({error: "Passwords don't match!"});
     }
 
@@ -32,10 +29,12 @@ class Login extends Component {
     };
 
     axios
-      .post("/auth/register", data)
+      .post("/auth/signup", data)
       .then((response) => {
-        //TODO: WRONG DATA
-        
+        if(response.status === 201){
+          return this.setState({redirect: "/login"});
+        }
+        return this.setState({error: "an error ocurred!"});
       })
       .catch((error) => {
         console.log(error, "ERROR");
@@ -43,6 +42,9 @@ class Login extends Component {
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     return (
       <div>
         {this.state.error && <Alert variant="danger">{this.state.error}</Alert>}
@@ -52,7 +54,7 @@ class Login extends Component {
             <Form.Control
               type="text"
               name="username"
-              placeholder="Enter email"
+              placeholder="Enter Username"
               className="col-10 col-sm-3 form-input"
               onChange={(e) => this.onChangeHandler(e)}
             />

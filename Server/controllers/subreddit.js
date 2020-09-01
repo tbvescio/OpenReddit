@@ -83,6 +83,7 @@ exports.getFrontPage = async (req, res, next) => {
 exports.getFrontPagePublic = async (req, res, next) => {
   try {
     const posts = await Post.find().sort({ time: -1 }).limit(30);
+    console.log(posts);
     res.status(200).json({
       status: "success!",
       posts: posts,

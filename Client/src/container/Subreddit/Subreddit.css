@@ -1,3 +1,11 @@
 .subreddit-card{
     background-color: #333333;
 }
+
+#description{
+    color: #bebebe;
+}
+#title{
+    font: 1.5em;
+    font-weight: bold;
+}

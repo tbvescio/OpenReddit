@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/Button";
+import {Form, Alert, Button}from "react-bootstrap";
 import Cookie from "../../util/cookie";
 import "./Login.css";
 

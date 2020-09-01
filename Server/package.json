@@ -7,7 +7,6 @@
     "test": "mocha",
     "dev": "nodemon app.js",
     "start": "node app.js"
-
   },
   "author": "",
   "license": "ISC",

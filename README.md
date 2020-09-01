@@ -39,6 +39,7 @@ $ npm start
 | /api/auth/signup | POST |username , password | |
 | /api/u/suscribe/:subreddit | PUT | | *auth|
 | /api/u/unsuscribe/:subreddit | PUT || *auth|
+| /api/u/:username/:subreddit | GET || check if is suscribed|
 | /api/u/:username | GET || retrives user profile|
 | /api/create-post | POST |subreddit , title , body| *auth|
 | /api/vote-post | PUT |postId , isUpvote|*auth / isUpvote is boolean |

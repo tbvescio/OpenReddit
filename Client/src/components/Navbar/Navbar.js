@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import FormControl from "react-bootstrap/FormControl";
+import {FormControl, Nav, Navbar} from "react-bootstrap";
 import { Redirect } from "react-router";
 import "./Navbar.css";
 
@@ -39,6 +37,7 @@ class navbar extends Component {
               />
             </Nav>
             <Nav className="ml-auto">
+
               <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link href="/register">Register</Nav.Link>
               <Nav.Link href="/logout">Logout</Nav.Link>

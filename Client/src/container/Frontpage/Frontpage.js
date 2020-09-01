@@ -24,8 +24,11 @@ class Frontpage extends Component {
       axios
         .get("/frontpage", config)
         .then((response) => {
-          this.setState({ posts: response.data.posts });
-          console.log(response)
+          let posts = response.data.posts;
+          if(posts.length === 0){
+            return this.setState({ error: "You don't have posts to show" });
+          }
+          return this.setState({ posts: response.data.posts });
         })
         .catch((error) => {
           console.log(error, "ERROR");
@@ -34,6 +37,7 @@ class Frontpage extends Component {
       axios
         .get("/frontpage-public")
         .then((response) => {
+          console.log(response);
           this.setState({ posts: response.data.posts });
         })
         .catch((error) => {

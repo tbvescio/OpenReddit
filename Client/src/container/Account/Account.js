@@ -3,8 +3,7 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 import Cookie from "../../util/cookie";
 import Post from "../../components/Post/Post";
-import Alert from "react-bootstrap/Alert";
-import Card from "react-bootstrap/Card";
+import {Card,Alert}from "react-bootstrap";
 import "./Account.css";
 
 class Account extends Component {

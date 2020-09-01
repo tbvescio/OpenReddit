@@ -36,7 +36,7 @@ exports.suscribe = async (req, res, next) => {
       throw error;
     }
 
-    const updateResult = await Account.updateOne(
+    await Account.updateOne(
       { username: req.username },
       { $push: { suscribed: subreddit } }
     );
@@ -67,6 +67,37 @@ exports.unSuscribe = async (req, res, next) => {
       { $pull: { suscribed: subreddit } }
     );
     res.status(200).json({ message: "Success!" });
+    return;
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+    return err;
+  }
+};
+
+exports.isSuscribed = async (req, res, next) => {
+  try {
+    const subreddit = req.params.subreddit;
+    const username = req.params.username;
+
+    const fetchedUser = await Account.findOne({ username: username });
+    if (!fetchedUser) {
+      const error = new Error("That user does not exists!");
+      error.statusCode = 409;
+      throw error;
+    }
+    let result;
+      fetchedUser.suscribed.forEach((sub) => {
+      if (sub === subreddit) {
+        result = true;
+      }else{
+        result = false;
+      }
+    });
+
+    res.status(200).json({ message: "Success!", "isSuscribed": result });
     return;
   } catch (err) {
     if (!err.statusCode) {

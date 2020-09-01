@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
+import {Card,ListGroup } from "react-bootstrap";
 import "./ResultPage.css"
 
 class ResultPage extends Component {
