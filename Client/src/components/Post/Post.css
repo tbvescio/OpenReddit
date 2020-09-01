@@ -1,0 +1,36 @@
+.card {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 2em;
+    color: white;
+    background-color: #292929;
+}
+.card hr{
+    border-top: 1px solid white;
+}
+
+.card a{
+    color: inherit; 
+}
+
+.card a:hover{
+    color: #BB86FC; 
+}
+
+.card #title{
+    font-size: 2em;
+}
+
+.card .votes-container{
+    display: inline-flex;
+    align-items: center;
+}
+
+.card .votes-container #votes{
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+.card #subtitle{
+    font-size: 0.75em;
+}
