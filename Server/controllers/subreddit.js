@@ -1,12 +1,12 @@
+const createError = require('http-errors')
+
 const Account = require("../models/account");
 const Subreddit = require("../models/subreddit");
 const Post = require("../models/post");
 
-
 exports.createSubreddit = async (req, res, next) => {
   try {
-    const name = req.body.name;
-    const description = req.body.description;
+    const {name, description} = req.body;
 
     const fetchedSubreddit = await Subreddit.findOne({ name: name });
     if (fetchedSubreddit) {
@@ -21,14 +21,10 @@ exports.createSubreddit = async (req, res, next) => {
       { username: req.username },
       { $push: { owned_subreddit: name } }
     );
-    res.status(200).json({ message: "Success!" });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(200).json({ message: "Success!" });
+  
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
@@ -42,58 +38,55 @@ exports.getSubreddit = async (req, res, next) => {
       throw error;
     }
     const subredditPosts = await Post.find({ subreddit: subreddit });
-    res.status(200).json({
+    return res.status(200).json({
       subreddit: subreddit,
       subreddit_description: fetchedSubreddit.description,
       subreddit_posts: subredditPosts,
     });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.getFrontPage = async (req, res, next) => {
   try {
+    const { page = 1, limit = 10 } = req.query;
+
     const suscribedSubs = await Account.find(
       { username: req.username },
       "suscribed"
-    );
+    )
+    
     const posts = await Post.find({
       subreddit: { $in: suscribedSubs[0].suscribed },
+    })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    return res.status(200).json({
+    status: "success!",
+    posts: posts,
     });
-    res.status(200).json({
-      status: "success!",
-      posts: posts,
-    });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.getFrontPagePublic = async (req, res, next) => {
   try {
-    const posts = await Post.find().sort({ time: -1 }).limit(30);
-    console.log(posts);
-    res.status(200).json({
+    const { page = 1, limit = 10 } = req.query;
+
+    const posts = await Post.find()
+      .sort({ time: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    return res.status(200).json({
       status: "success!",
       posts: posts,
     });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };

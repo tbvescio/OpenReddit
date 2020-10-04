@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error("wrong data, check the documentation endpoint!");
     error.statusCode = 400;
-    throw error;
+    return next(createError(error.statusCode || 500 , error));
   }
   next();
 };

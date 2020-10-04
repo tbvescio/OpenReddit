@@ -1,13 +1,11 @@
-const Account = require("../models/account");
+const createError = require('http-errors')
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const dotenv = require("dotenv");
-dotenv.config();
+const Account = require("../models/account");
 
 exports.signup = async (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const {username, password} = req.body;
   const created_date = new Date();
 
   try {
@@ -26,20 +24,14 @@ exports.signup = async (req, res, next) => {
     });
 
     const result = await account.save();
-    res.status(201).json({ message: "User created!", userId: result._id });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(201).json({ message: "User created!", userId: result._id });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.login = async (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const {username, password} = req.body;
   let loadedUser;
 
   try {
@@ -64,15 +56,10 @@ exports.login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES }
     );
-    res
+    return res
       .status(200)
       .json({ token: token, AccountId: loadedUser._id.toString() });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };

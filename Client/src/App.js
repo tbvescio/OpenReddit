@@ -1,14 +1,16 @@
 import React from "react";
-import "./App.css";
-import { BrowserRouter } from "react-router-dom";
-import Main from "./container/Main";
 
+import Navbar from "./components/Navbar/Navbar";
+import AuthForm from "./components/AuthForm/AuthForm";
+
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
-        <Main />
-      </div>
+      <Navbar />
+      <Switch>
+        <Route path="/auth" exact component={AuthForm} />
+      </Switch>
     </BrowserRouter>
   );
 }

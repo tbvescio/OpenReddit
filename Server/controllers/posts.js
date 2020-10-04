@@ -1,12 +1,12 @@
+const createError = require('http-errors')
+
 const Post = require("../models/post");
 const Account = require("../models/account");
 const Comment = require("../models/comment");
 
 exports.createPost = async (req, res, next) => {
   try {
-    const subreddit = req.body.subreddit;
-    const title = req.body.title;
-    const body = req.body.body;
+    const {subreddit, title, body} = req.body;
 
     const post = new Post({
       username: req.username,
@@ -21,14 +21,10 @@ exports.createPost = async (req, res, next) => {
       { $push: { posts: post } }
     );
 
-    res.status(200).json({ message: "Success!" });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(200).json({ message: "Success!" });
+    
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
@@ -57,22 +53,15 @@ exports.votePost = async (req, res, next) => {
       await user.downvote();
     }
 
-    res.status(200).json({ message: "Success!" });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(200).json({ message: "Success!" });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.commentPost = async (req, res, next) => {
   try {
-    const body = req.body.body;
-    const username = req.body.username;
-    const postId = req.body.postId;
+    const {body,username ,postId } = req.body;
 
     const commment = new Comment({
       body: body,
@@ -81,21 +70,15 @@ exports.commentPost = async (req, res, next) => {
     });
 
     await commment.save();
-    res.status(200).json({ message: "Success!" });
-    return;
+    return res.status(200).json({ message: "Success!" });
   } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.voteComment = async (req, res, next) => {
   try {
-    const commentId = req.body.commentId;
-    const isUpvote = req.body.isUpvote;
+    const {commentId,isUpvote} = req.body;
 
     const comment = await Comment.findOne({ _id: commentId });
     if (!comment) {
@@ -117,21 +100,15 @@ exports.voteComment = async (req, res, next) => {
       await user.downvote();
     }
 
-    res.status(200).json({ message: "Success!" });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(200).json({ message: "Success!" });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
 exports.postById = async (req, res, next) => {
   try {
-    const subreddit = req.params.subreddit;
-    const postId = req.params.postId;
+    const {subreddit, postId} = req.params;
 
     const post = await Post.findOne({ _id: postId });
     if (!post) {
@@ -141,14 +118,9 @@ exports.postById = async (req, res, next) => {
     }
 
     const comments = await Comment.find({ postId: postId });
-    res.status(200).json({ post: post, post_comments: comments });
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(200).json({ post: post, post_comments: comments });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
 
@@ -169,15 +141,10 @@ exports.deletePost = async (req, res, next) => {
       });
       user.posts = userPosts;
       await user.save();
-      res.status(200).json({ post: post });
-      return;
+      return res.status(200).json({ post: post });
     }
-    res.status(401).json({ message: "user dont own post!" });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return res.status(401).json({ message: "user dont own post!" });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };

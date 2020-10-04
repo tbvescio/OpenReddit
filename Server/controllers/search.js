@@ -1,3 +1,5 @@
+const createError = require('http-errors')
+
 const Subreddit = require("../models/subreddit");
 const Account = require("../models/account");
 
@@ -19,14 +21,8 @@ exports.search = async (req, res, next) => {
     
     dataResponse.accounts = accounts;
     dataResponse.subreddits = subreddits;
-    res.status(200).json({ message: "Success!", data: dataResponse });
-
-    return;
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-    return err;
+    return  res.status(200).json({ message: "Success!", data: dataResponse });
+  } catch (error) {
+    return next(createError(error.statusCode || 500, error));
   }
 };
