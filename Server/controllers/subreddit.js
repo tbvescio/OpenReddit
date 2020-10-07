@@ -1,4 +1,4 @@
-const createError = require('http-errors')
+const createError = require("http-errors");
 
 const Account = require("../models/account");
 const Subreddit = require("../models/subreddit");
@@ -6,7 +6,7 @@ const Post = require("../models/post");
 
 exports.createSubreddit = async (req, res, next) => {
   try {
-    const {name, description} = req.body;
+    const { name, description } = req.body;
 
     const fetchedSubreddit = await Subreddit.findOne({ name: name });
     if (fetchedSubreddit) {
@@ -22,7 +22,6 @@ exports.createSubreddit = async (req, res, next) => {
       { $push: { owned_subreddit: name } }
     );
     return res.status(200).json({ message: "Success!" });
-  
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
   }
@@ -55,19 +54,25 @@ exports.getFrontPage = async (req, res, next) => {
     const suscribedSubs = await Account.find(
       { username: req.username },
       "suscribed"
-    )
-    
+    );
+
     const posts = await Post.find({
       subreddit: { $in: suscribedSubs[0].suscribed },
     })
       .limit(limit * 1)
       .skip((page - 1) * limit);
+      
+    let totalPages = await Post.countDocuments({
+      subreddit: { $in: suscribedSubs[0].suscribed },
+    });
+    totalPages = Math.ceil(totalPages/10);
 
     return res.status(200).json({
-    status: "success!",
-    posts: posts,
+      status: "success!",
+      totalPages,
+      posts: posts,
+      
     });
-    
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
   }
@@ -82,8 +87,12 @@ exports.getFrontPagePublic = async (req, res, next) => {
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
+      let totalPages = await Post.estimatedDocumentCount();
+      totalPages = Math.ceil(totalPages/10);
+
     return res.status(200).json({
       status: "success!",
+      totalPages,
       posts: posts,
     });
   } catch (error) {

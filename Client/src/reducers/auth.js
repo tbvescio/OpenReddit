@@ -1,4 +1,4 @@
-const initialState = { isLogged: false, token: "" };
+const initialState = { isLogged: false, token: null, username: null };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -6,7 +6,8 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isLogged: true,
-        token: action.payload,
+        token: action.payload.token,
+        username: action.payload.username,
       };
     case "SIGN_OUT":
       return initialState

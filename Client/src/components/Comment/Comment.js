@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  CardActions,
   CardContent,
-  Button,
   Typography,
   Grid,
   Divider,
@@ -12,28 +10,16 @@ import {
 } from "@material-ui/core";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import formatDate from "../../util/formatDate";
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
   title: {
     fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  voting: {
-    textAlign: "center",
   },
   item: {
     margin: "1em auto",
@@ -42,27 +28,25 @@ const useStyles = makeStyles({
     color: "inherit",
     textDecoration: "none",
   },
-  date: {
-    float: "right",
-  },
+  votes: {
+      float: "right"
+  }
 });
 
-export default function Post(props) {
+export default function OutlinedCard(props) {
   const classes = useStyles();
-  const [redirectToPost, setRedirectToPost] = useState(null);
   const authState = useSelector((state) => state.auth);
-
 
   const voteHandler = async (isUpvote) => {
     if (authState.isLogged) {
       try {
-        let data = { postId: props.postId, isUpvote: isUpvote };
+        let data = { commentId: props.commentId, isUpvote: isUpvote };
         let config = {
           headers: {
             Authorization: "Bearer " + authState.token,
           },
         };
-        await axios.put("/vote-post", data, config);
+        await axios.put("/vote-comment", data, config);
       } catch (error) {
         console.log(error);
       }
@@ -71,59 +55,39 @@ export default function Post(props) {
     }
   };
 
-  const commentClickHandler = async () => {
-    setRedirectToPost(`/r/${props.subreddit}/${props.postId}`);
-  };
-
   return (
     <Grid item md={4} className={classes.item}>
-      {redirectToPost && <Redirect to={redirectToPost} />}
       <Card className={classes.root} variant="outlined">
         <Grid container>
           <Grid item xs={1} className={classes.voting}>
             <IconButton onClick={() => voteHandler(true)}>
               <ArrowDropUpIcon fontSize="large" />
             </IconButton>
-            <Typography paragraph noWrap>
-              {props.votes}
-            </Typography>
             <IconButton onClick={() => voteHandler(false)}>
               <ArrowDropDownIcon fontSize="large" />
             </IconButton>
           </Grid>
           <Divider orientation="vertical" flexItem />
-          <Grid item xs={10}>
+          <Grid item xs={10} className={classes.voting}>
             <CardContent>
               <Typography
                 className={classes.title}
                 color="textSecondary"
                 gutterBottom
               >
-                <Link to={`r/${props.subreddit}`} className={classes.link}>
-                  r/{props.subreddit}
+                <Link to={`/u/${props.username}`} className={classes.link}>
+                  /u/{props.username}
                 </Link>
-                {" by "}
-                <Link to={`r/${props.username}`} className={classes.link}>
-                  u/{props.username}
-                </Link>
-                <span className={classes.date}>{formatDate(props.date)}</span>
+                
+                <span className={classes.votes}>{props.votes} points</span> 
               </Typography>
-              <Typography variant="h5" component="h2">
-                {props.title}
-              </Typography>
-              <Typography variant="body2" component="p">
+              <Typography variant="body1" component="p">
                 {props.body}
               </Typography>
             </CardContent>
-            <CardActions>
-              <Button size="small" onClick={commentClickHandler}>
-                Comments
-              </Button>
-            </CardActions>
           </Grid>
         </Grid>
       </Card>
-      {props.children}
     </Grid>
   );
 }

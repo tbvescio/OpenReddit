@@ -86,8 +86,8 @@ export default function LoginForm() {
     } else {
       try {
         let response = await axios.post("/auth/login", data);
-        let token = response.data.token;
-        dispatch(signIn(token));
+        const  {token} = response.data;
+        dispatch(signIn(token, inputData.username));
       } catch (error) {
         if (error.response.status === 401) {
           return setErrorMessage("Data is not correct!");

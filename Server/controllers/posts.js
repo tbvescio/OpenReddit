@@ -7,7 +7,7 @@ const Comment = require("../models/comment");
 exports.createPost = async (req, res, next) => {
   try {
     const {subreddit, title, body} = req.body;
-
+    
     const post = new Post({
       username: req.username,
       subreddit: subreddit,

@@ -7,7 +7,7 @@ import {
   MenuItem,
   Menu,
   Toolbar,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [redirectSignIn, setRedirectSignIn] = React.useState(false);
+  const [redirect, setRedirect] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -110,7 +110,7 @@ export default function PrimarySearchAppBar() {
   };
 
   const handleSignIn = () => {
-    setRedirectSignIn(true);
+    setRedirect("/auth");
     handleMenuClose();
   };
 
@@ -165,10 +165,15 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      {redirectSignIn && <Redirect to="/auth" />}
+      {redirect && <Redirect to={redirect} />}
       <AppBar position="static" color="primary">
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography
+            className={classes.title}
+            variant="h6"
+            noWrap
+            onClick={() => setRedirect("/")}
+          >
             OpenReddit
           </Typography>
           <div className={classes.search}>

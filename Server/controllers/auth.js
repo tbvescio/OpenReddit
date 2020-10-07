@@ -58,7 +58,7 @@ exports.login = async (req, res, next) => {
     );
     return res
       .status(200)
-      .json({ token: token, AccountId: loadedUser._id.toString() });
+      .json({ token: token, AccountId: loadedUser._id.toString(), username: username });
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
   }

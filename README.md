@@ -43,7 +43,7 @@ $ npm start
 | /api/u/:username | GET || retrives user profile|
 | /api/create-post | POST |subreddit , title , body| *auth|
 | /api/vote-post | PUT |postId , isUpvote|*auth / isUpvote is boolean |
-| /api/create-comment | POST |postId , body , username| *auth / isUpvote is boolean|
+| /api/create-comment | POST |postId , body , username| *auth|
 | /api/vote-comment | PUT |commentId ,  isUpvote| *auth / isUpvote is boolean|
 | /api/r/:subreddit/:postId | GET || gets specific post |
 | /api/search/:filter | GET || gets subreddits and profiles based on filter |
