@@ -11,12 +11,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import Post from "../../components/Post/Post";
 
 const getSubreddit = async (subreddit, setData) => {
@@ -32,6 +32,17 @@ const getSubreddit = async (subreddit, setData) => {
   }
 };
 
+const getIsSucribed = async (username, subreddit, setIsSuscribed) => {
+  try {
+    if (username !== null) {
+      let response = await axios.get(`/u/${username}/${subreddit}`);
+      return setIsSuscribed(response.data.isSuscribed);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const useStyles = makeStyles({
   item: {
     margin: "1em auto",
@@ -39,13 +50,15 @@ const useStyles = makeStyles({
   centerText: {
     textAlign: "center",
   },
-  button: {
-    margin: "0px auto",
+  center: {
+    display: "flex",
+    justifyContent: "center",
   },
 });
 
 export default function Singlepost(props) {
   const classes = useStyles();
+  let history = useHistory();
   const { subreddit } = props.match.params;
   const [data, setData] = useState({
     subreddit: null,
@@ -53,6 +66,7 @@ export default function Singlepost(props) {
     subreddit_posts: [],
   });
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isSuscribed, setIsSuscribed] = useState(null);
   const [dialogInput, setDialogInput] = useState({
     title: null,
     description: null,
@@ -64,6 +78,10 @@ export default function Singlepost(props) {
     async function callGetSubreddit() {
       await getSubreddit(subreddit, setData);
     }
+    async function callGetIsSuscribed() {
+      await getIsSucribed(authState.username, subreddit, setIsSuscribed);
+    }
+    callGetIsSuscribed();
     callGetSubreddit();
   }, []);
 
@@ -94,12 +112,11 @@ export default function Singlepost(props) {
         title: dialogInput.title,
         body: dialogInput.description,
       };
-      console.log(dataRequest)
+
       let config = { headers: { Authentication: "Bearer " + authState.token } };
-      let response = await axios.post("/create-post", dataRequest, config);
-      console.log(response)
+      await axios.post("/create-post", dataRequest, config);
     } catch (error) {
-      console.log(error);
+      history.push("/error");
     }
     handleClose();
   };
@@ -113,6 +130,30 @@ export default function Singlepost(props) {
       return setErrorMessage("You must be logged!");
     }
     setOpen(true);
+  };
+
+  const handleSuscribe = async () => {
+    try {
+      let config = {
+        headers: { Authorization: "Bearer " + authState.token },
+      };
+      let response = await axios.put(
+        `/u/suscribe/${subreddit}`,{}, config
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUnSuscribe = async () => {
+    try {
+      const config = {
+        headers: { Authorization: "Bearer " + authState.token },
+      };
+      let response = await axios.put(`/u/unsuscribe/${subreddit}`, {}, config);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -129,15 +170,31 @@ export default function Singlepost(props) {
                 {data.subreddit_description}
               </Typography>
             </CardContent>
-            <CardActions>
-              <Button
-                size="medium"
-                className={classes.button}
-                variant="outlined"
-                onClick={handleOpen}
-              >
+            <CardActions className={classes.center}>
+              <Button size="medium" variant="outlined" onClick={handleOpen}>
                 Create Post
               </Button>
+              {authState.isLogged && (
+                <div>
+                  {isSuscribed ? (
+                    <Button
+                      size="medium"
+                      variant="outlined"
+                      onClick={handleUnSuscribe}
+                    >
+                      Unsuscribe
+                    </Button>
+                  ) : (
+                    <Button
+                      size="medium"
+                      variant="outlined"
+                      onClick={handleSuscribe}
+                    >
+                      Suscribe
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardActions>
           </Card>
         </Grid>

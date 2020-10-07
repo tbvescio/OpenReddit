@@ -16,6 +16,7 @@ import { Link, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import formatDate from "../../util/formatDate";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles({
 
 export default function Post(props) {
   const classes = useStyles();
+  let history = useHistory();
   const [redirectToPost, setRedirectToPost] = useState(null);
   const authState = useSelector((state) => state.auth);
 
@@ -64,7 +66,7 @@ export default function Post(props) {
         };
         await axios.put("/vote-post", data, config);
       } catch (error) {
-        console.log(error);
+        history.push("/error");
       }
     } else {
       props.setErrorMessage("You must be logged to do that!");

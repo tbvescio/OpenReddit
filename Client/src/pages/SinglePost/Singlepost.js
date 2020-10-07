@@ -5,30 +5,8 @@ import Comment from "../../components/Comment/Comment";
 import { Grid, TextField, Button } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
-const getPost = async (subreddit, postId, setData, setErrorMessage) => {
-  try {
-    let response = await axios.get(`/r/${subreddit}/${postId}`);
-    let { post, post_comments } = response.data;
-
-    post_comments = post_comments.map((comment) => {
-      return (
-        <Comment
-          commentId={comment._id}
-          key={comment._id}
-          username={comment.username}
-          votes={comment.votes}
-          body={comment.body}
-          setErrorMessage={setErrorMessage}
-        />
-      );
-    });
-
-    return setData({ post: post, comments: post_comments });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export default function Singlepost(props) {
   const { subreddit, postId } = props.match.params;
@@ -36,10 +14,11 @@ export default function Singlepost(props) {
   const [textInput, setTextInput] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const authState = useSelector((state) => state.auth);
+  let history = useHistory();
 
   useEffect(() => {
     async function callGetPost() {
-      await getPost(subreddit, postId, setData, setErrorMessage, handleSubmit);
+      await getPost();
     }
     callGetPost();
   }, [data,postId, subreddit]);
@@ -62,6 +41,30 @@ export default function Singlepost(props) {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getPost = async () => {
+    try {
+      let response = await axios.get(`/r/${subreddit}/${postId}`);
+      let { post, post_comments } = response.data;
+  
+      post_comments = post_comments.map((comment) => {
+        return (
+          <Comment
+            commentId={comment._id}
+            key={comment._id}
+            username={comment.username}
+            votes={comment.votes}
+            body={comment.body}
+            setErrorMessage={setErrorMessage}
+          />
+        );
+      });
+  
+      return setData({ post: post, comments: post_comments });
+    } catch (error) {
+      history.push("/error");
     }
   };
 

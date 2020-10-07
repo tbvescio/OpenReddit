@@ -8,6 +8,7 @@ import Frontpage from "./pages/Frontpage/Frontpage";
 import Singlepost from "./pages/SinglePost/Singlepost";
 import Subreddit from "./pages/Subreddit/Subreddit";
 import Profile from "./pages/Profile/Profile";
+import Error from "./pages/Error/Error";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={Frontpage} />
           <Route path="/auth" exact component={AuthForm} />
+          <Route path="/error" exact component={Error} />
           <Route path="/u/:username" exact component={Profile} />
           <Route path="/r/:subreddit" exact component={Subreddit} />
           <Route path="/r/:subreddit/:postId" exact component={Singlepost} />

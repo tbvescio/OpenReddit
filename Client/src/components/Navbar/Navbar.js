@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "../../actions";
 import { Redirect } from "react-router-dom";
 
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -89,7 +90,7 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const isLogged = useSelector((state) => state.auth.isLogged);
+  const authState = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleProfileMenuOpen = (event) => {
@@ -119,6 +120,11 @@ export default function PrimarySearchAppBar() {
     handleMenuClose();
   };
 
+  const handleProfileClick = () => {
+    setRedirect(`/u/${authState.username}`);
+    handleMenuClose();
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -130,9 +136,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {isLogged ? (
+      {authState.isLogged ? (
         <div>
-          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
           <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
         </div>
       ) : (
@@ -152,9 +158,9 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {isLogged ? (
+      {authState.isLogged ? (
         <div>
-          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
           <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
         </div>
       ) : (

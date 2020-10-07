@@ -3,20 +3,8 @@ import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Card, CardContent, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import Post from "../../components/Post/Post";
-
-const getProfile = async (username, setData) => {
-  try {
-    let response = await axios.get(`/u/${username}`);
-    return setData({
-      karma: response.data.karma,
-      posts: response.data.posts,
-      created_date: response.data.created_date,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const useStyles = makeStyles({
   item: {
@@ -32,6 +20,7 @@ const useStyles = makeStyles({
 
 export default function Singlepost(props) {
   const classes = useStyles();
+  let history = useHistory();
   const { username } = props.match.params;
   const [data, setData] = useState({
     karma: null,
@@ -46,6 +35,19 @@ export default function Singlepost(props) {
     }
     callgetProfile();
   }, []);
+
+  const getProfile = async () => {
+    try {
+      let response = await axios.get(`/u/${username}`);
+      return setData({
+        karma: response.data.karma,
+        posts: response.data.posts,
+        created_date: response.data.created_date,
+      });
+    } catch (error) {
+      history.push("/error");
+    }
+  };
 
   const posts = data.posts.map((post) => {
     return (

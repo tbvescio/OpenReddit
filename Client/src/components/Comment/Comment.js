@@ -13,6 +13,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles({
 export default function OutlinedCard(props) {
   const classes = useStyles();
   const authState = useSelector((state) => state.auth);
+  let history = useHistory();
 
   const voteHandler = async (isUpvote) => {
     if (authState.isLogged) {
@@ -48,7 +50,7 @@ export default function OutlinedCard(props) {
         };
         await axios.put("/vote-comment", data, config);
       } catch (error) {
-        console.log(error);
+        history.push("/error");
       }
     } else {
       props.setErrorMessage("You must be logged to do that!");

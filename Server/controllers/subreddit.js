@@ -61,17 +61,16 @@ exports.getFrontPage = async (req, res, next) => {
     })
       .limit(limit * 1)
       .skip((page - 1) * limit);
-      
+
     let totalPages = await Post.countDocuments({
       subreddit: { $in: suscribedSubs[0].suscribed },
     });
-    totalPages = Math.ceil(totalPages/10);
+    totalPages = Math.ceil(totalPages / 10);
 
     return res.status(200).json({
       status: "success!",
       totalPages,
       posts: posts,
-      
     });
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
@@ -87,8 +86,8 @@ exports.getFrontPagePublic = async (req, res, next) => {
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
-      let totalPages = await Post.estimatedDocumentCount();
-      totalPages = Math.ceil(totalPages/10);
+    let totalPages = await Post.estimatedDocumentCount();
+    totalPages = Math.ceil(totalPages / 10);
 
     return res.status(200).json({
       status: "success!",
