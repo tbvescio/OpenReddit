@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardContent, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
+} from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Post from "../../components/Post/Post";
@@ -22,6 +33,11 @@ export default function Singlepost(props) {
   const classes = useStyles();
   let history = useHistory();
   const { username } = props.match.params;
+  const [open, setOpen] = useState(false);
+  const [dialogInput, setDialogInput] = useState({
+    title: null,
+    description: null,
+  });
   const [data, setData] = useState({
     karma: null,
     posts: [],
@@ -47,6 +63,32 @@ export default function Singlepost(props) {
     } catch (error) {
       history.push("/error");
     }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      let data = {
+        name: dialogInput.name,
+        description: dialogInput.description,
+      };
+      let config = { headers: { Authentication: "Bearer " + authState.token } };
+      await axios.post("/create-subreddit", data, config);
+    } catch (error) {
+      history.push("/error");
+    }
+    handleClose();
+  };
+
+  const handleOnChange = (e) => {
+    setDialogInput({ ...dialogInput, [e.target.name]: e.target.value });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   const posts = data.posts.map((post) => {
@@ -76,11 +118,54 @@ export default function Singlepost(props) {
               <Typography variant="body2" component="p">
                 karma: {data.karma}
               </Typography>
+              {authState.isLogged && authState.username === username &&  (
+                <Button size="medium" variant="outlined" onClick={handleOpen}>
+                  Create Subreddit
+                </Button>
+              )}
             </CardContent>
           </Card>
         </Grid>
         {posts}
       </Grid>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Create Subreddit</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => handleOnChange(e)}
+          />
+          <TextField
+            margin="dense"
+            name="description"
+            label="Description"
+            type="text"
+            multiline
+            rows={3}
+            fullWidth
+            variant="outlined"
+            onChange={(e) => handleOnChange(e)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

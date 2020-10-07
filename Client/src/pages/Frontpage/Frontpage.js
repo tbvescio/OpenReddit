@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { Grid, CircularProgress} from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { Alert, Pagination } from "@material-ui/lab";
 import { useHistory } from "react-router-dom";
 import Post from "../../components/Post/Post";
@@ -11,13 +11,6 @@ export default function Frontpage() {
   const authState = useSelector((state) => state.auth);
   const [posts, setPosts] = useState({ posts: [], totalPages: 0 });
   const [errorMessage, setErrorMessage] = useState(null);
-
-  useEffect(() => {
-    async function callGetPosts() {
-      await getPosts();
-    }
-    callGetPosts();
-  }, [authState.token]);
 
   const getPosts = async (page = 1) => {
     try {
@@ -47,10 +40,15 @@ export default function Frontpage() {
       });
       return setPosts({ posts, totalPages: response.data.totalPages });
     } catch (error) {
-      history.push("/error")
+      history.push("/error");
     }
   };
-
+  useEffect(() => {
+    async function callGetPosts() {
+      await getPosts();
+    }
+    callGetPosts();
+  }, []);
   const handleChange = async (event, value) => {
     await getPosts(value);
   };

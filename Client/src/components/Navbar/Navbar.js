@@ -8,14 +8,16 @@ import {
   Menu,
   Toolbar,
   IconButton,
+  Switch,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { signOut } from "../../actions";
 import { Redirect } from "react-router-dom";
-
+import { changeTheme } from "../../actions";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -83,8 +85,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+  let history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [redirect, setRedirect] = React.useState(null);
+  const [searchInput, setSearchInput] = React.useState("");
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -123,6 +127,20 @@ export default function PrimarySearchAppBar() {
   const handleProfileClick = () => {
     setRedirect(`/u/${authState.username}`);
     handleMenuClose();
+  };
+
+  const handleTheme = () => {
+    dispatch(changeTheme());
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    if (event.keyCode === 13) {
+      history.push(`/search/${searchInput}`);
+    }
   };
 
   const menuId = "primary-search-account-menu";
@@ -193,9 +211,14 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => handleSearchChange(e)}
+              onKeyDown={(e) => handleSearchSubmit(e)}
             />
           </div>
           <div className={classes.grow} />
+          <div>
+            <Switch name="theme" color="secondary" onChange={handleTheme} />
+          </div>
           <div className={classes.sectionDesktop}>
             <IconButton
               edge="end"

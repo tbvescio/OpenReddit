@@ -4,6 +4,6 @@ const searchcontroller = require("../controllers/search");
 const router = express.Router();
 
 
-router.get("/:filter", searchcontroller.search);
+router.get("/search", searchcontroller.search);
 
 module.exports = router;

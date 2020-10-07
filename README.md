@@ -46,7 +46,7 @@ $ npm start
 | /api/create-comment | POST |postId , body , username| *auth|
 | /api/vote-comment | PUT |commentId ,  isUpvote| *auth / isUpvote is boolean|
 | /api/r/:subreddit/:postId | GET || gets specific post |
-| /api/search/:filter | GET || gets subreddits and profiles based on filter |
+| /api/search?query= | GET || gets subreddits and profiles based on filter |
 | /api/create-subreddit | POST |name , description|  *auth |
 | /api/r/:subreddit | GET || |
 | /api/frontpage | GET || *auth|

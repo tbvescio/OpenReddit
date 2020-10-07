@@ -10,3 +10,9 @@ export const signOut = () => {
         type: 'SIGN_OUT'
     }
 }
+
+export const changeTheme = () => {
+    return {
+        type: 'CHANGE_THEME'
+    }
+}

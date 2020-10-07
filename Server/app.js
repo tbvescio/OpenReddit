@@ -34,8 +34,8 @@ app.use((req, res, next) => {
 app.use("/api/", subredditRoutes);
 app.use("/api/", accountRoutes);
 app.use("/api/", postRoutes);
+app.use("/api/", searchRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/search", searchRoutes);
 
 
 mongoose

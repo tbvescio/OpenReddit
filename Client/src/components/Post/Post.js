@@ -46,6 +46,9 @@ const useStyles = makeStyles({
   date: {
     float: "right",
   },
+  icon: {
+    width: "100%",
+  },
 });
 
 export default function Post(props) {
@@ -53,7 +56,6 @@ export default function Post(props) {
   let history = useHistory();
   const [redirectToPost, setRedirectToPost] = useState(null);
   const authState = useSelector((state) => state.auth);
-
 
   const voteHandler = async (isUpvote) => {
     if (authState.isLogged) {
@@ -83,13 +85,19 @@ export default function Post(props) {
       <Card className={classes.root} variant="outlined">
         <Grid container>
           <Grid item xs={1} className={classes.voting}>
-            <IconButton onClick={() => voteHandler(true)}>
+            <IconButton
+              onClick={() => voteHandler(true)}
+              className={classes.icon}
+            >
               <ArrowDropUpIcon fontSize="large" />
             </IconButton>
             <Typography paragraph noWrap>
               {props.votes}
             </Typography>
-            <IconButton onClick={() => voteHandler(false)}>
+            <IconButton
+              onClick={() => voteHandler(false)}
+              className={classes.icon}
+            >
               <ArrowDropDownIcon fontSize="large" />
             </IconButton>
           </Grid>
@@ -105,7 +113,7 @@ export default function Post(props) {
                   r/{props.subreddit}
                 </Link>
                 {" by "}
-                <Link to={`r/${props.username}`} className={classes.link}>
+                <Link to={`u/${props.username}`} className={classes.link}>
                   u/{props.username}
                 </Link>
                 <span className={classes.date}>{formatDate(props.date)}</span>

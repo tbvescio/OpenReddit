@@ -137,7 +137,7 @@ export default function Singlepost(props) {
       let config = {
         headers: { Authorization: "Bearer " + authState.token },
       };
-      let response = await axios.put(
+      await axios.put(
         `/u/suscribe/${subreddit}`,{}, config
       );
     } catch (error) {
@@ -150,7 +150,7 @@ export default function Singlepost(props) {
       const config = {
         headers: { Authorization: "Bearer " + authState.token },
       };
-      let response = await axios.put(`/u/unsuscribe/${subreddit}`, {}, config);
+      await axios.put(`/u/unsuscribe/${subreddit}`, {}, config);
     } catch (error) {
       console.log(error);
     }
