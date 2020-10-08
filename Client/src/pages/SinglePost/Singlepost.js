@@ -7,7 +7,6 @@ import Alert from "@material-ui/lab/Alert";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-
 export default function Singlepost(props) {
   const { subreddit, postId } = props.match.params;
   const [data, setData] = useState({ post: null, comments: null });
@@ -17,11 +16,31 @@ export default function Singlepost(props) {
   let history = useHistory();
 
   useEffect(() => {
-    async function callGetPost() {
-      await getPost();
-    }
-    callGetPost();
-  }, [data,postId, subreddit]);
+    const getPost = async () => {
+      try {
+        let response = await axios.get(`/r/${subreddit}/${postId}`);
+        let { post, post_comments } = response.data;
+
+        post_comments = post_comments.map((comment) => {
+          return (
+            <Comment
+              commentId={comment._id}
+              key={comment._id}
+              username={comment.username}
+              votes={comment.votes}
+              body={comment.body}
+              setErrorMessage={setErrorMessage}
+            />
+          );
+        });
+
+        return setData({ post: post, comments: post_comments });
+      } catch (error) {
+        history.push("/error");
+      }
+    };
+    getPost();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,36 +55,12 @@ export default function Singlepost(props) {
           headers: { Authorization: "Bearer " + authState.token },
         };
         await axios.post("/create-comment", dataRequest, config);
-        history.go(0)
+        history.go(0);
       } else {
         setErrorMessage("You must be logged to do that!");
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const getPost = async () => {
-    try {
-      let response = await axios.get(`/r/${subreddit}/${postId}`);
-      let { post, post_comments } = response.data;
-  
-      post_comments = post_comments.map((comment) => {
-        return (
-          <Comment
-            commentId={comment._id}
-            key={comment._id}
-            username={comment.username}
-            votes={comment.votes}
-            body={comment.body}
-            setErrorMessage={setErrorMessage}
-          />
-        );
-      });
-  
-      return setData({ post: post, comments: post_comments });
-    } catch (error) {
-      history.push("/error");
     }
   };
 
@@ -95,7 +90,7 @@ export default function Singlepost(props) {
               fullWidth
               onChange={(e) => setTextInput(e.target.value)}
             />
-            <Button variant="contained" color="primary" type="submit" fullWidth>
+            <Button variant="contained" color="primary" type="submit"  name="submit" fullWidth>
               Submit
             </Button>
           </form>

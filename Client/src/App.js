@@ -34,6 +34,7 @@ function App() {
             <Route path="/u/:username" exact component={Profile} />
             <Route path="/r/:subreddit" exact component={Subreddit} />
             <Route path="/r/:subreddit/:postId" exact component={Singlepost} />
+            <Route path="/"  component={Error} />
           </Switch>
         </Paper>
       </ThemeProvider>

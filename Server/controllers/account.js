@@ -14,7 +14,6 @@ exports.getUserProfile = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-
     return res.status(200).json({
       karma: user.karma,
       posts: user.posts,

@@ -151,6 +151,7 @@ export default function LoginForm() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            name="submit"
           >
             {isSignUp ? "Sign Up" : "Sign in"}
           </Button>

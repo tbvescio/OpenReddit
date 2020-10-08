@@ -46,24 +46,20 @@ export default function Singlepost(props) {
   const authState = useSelector((state) => state.auth);
 
   useEffect(() => {
-    async function callgetProfile() {
-      await getProfile(username, setData);
-    }
-    callgetProfile();
+    const getProfile = async () => {
+      try {
+        let response = await axios.get(`/u/${username}`);
+        return setData({
+          karma: response.data.karma,
+          posts: response.data.posts,
+          created_date: response.data.created_date,
+        });
+      } catch (error) {
+        history.push("/error");
+      }
+    };
+    getProfile();
   }, []);
-
-  const getProfile = async () => {
-    try {
-      let response = await axios.get(`/u/${username}`);
-      return setData({
-        karma: response.data.karma,
-        posts: response.data.posts,
-        created_date: response.data.created_date,
-      });
-    } catch (error) {
-      history.push("/error");
-    }
-  };
 
   const handleSubmit = async () => {
     try {
@@ -71,7 +67,7 @@ export default function Singlepost(props) {
         name: dialogInput.name,
         description: dialogInput.description,
       };
-      let config = { headers: { Authentication: "Bearer " + authState.token } };
+      let config = { headers: { Authorization: "Bearer " + authState.token } };
       await axios.post("/create-subreddit", data, config);
     } catch (error) {
       history.push("/error");
@@ -118,8 +114,13 @@ export default function Singlepost(props) {
               <Typography variant="body2" component="p">
                 karma: {data.karma}
               </Typography>
-              {authState.isLogged && authState.username === username &&  (
-                <Button size="medium" variant="outlined" onClick={handleOpen}>
+              {authState.isLogged && authState.username === username && (
+                <Button
+                  size="medium"
+                  variant="outlined"
+                  name="createSubreddit"
+                  onClick={handleOpen}
+                >
                   Create Subreddit
                 </Button>
               )}
@@ -158,10 +159,10 @@ export default function Singlepost(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} name="cancel" color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} name="submit" color="primary">
             Submit
           </Button>
         </DialogActions>

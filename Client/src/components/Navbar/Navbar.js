@@ -218,6 +218,7 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div>
+            <label for="theme" hidden>Change Theme</label>
             <Switch name="theme" color="secondary" onChange={handleTheme} />
           </div>
           <div className={classes.sectionDesktop}>

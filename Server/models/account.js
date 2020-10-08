@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const postShema = require("./postSchema");
 
 const accountShema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
@@ -13,23 +14,37 @@ const accountShema = new Schema({
   },
   created_date: Date,
   karma: {
-      type: Number,
-      default: 0
+    type: Number,
+    default: 0,
   },
+  posts: [postShema],
   saved_posts: Array,
   suscribed: Array,
   owned_subreddit: Array,
-  posts: Array
 });
 
-
-accountShema.methods.upvote = function () {
+accountShema.methods.upvote = function (postId) {
   this.karma++;
+  this.posts.map((post) => {
+    if (post._id == postId) {
+      post.votes++;
+      return post;
+    }
+    return post;
+  });
   return this.save();
 };
 
-accountShema.methods.downvote = function () {
+accountShema.methods.downvote = function (postId) {
   this.karma--;
+  this.posts.map((post) => {
+    if (post._id == postId) {
+      console.log("truee")
+      post.votes--;
+      return post;
+    }
+    return post;
+  });
   return this.save();
 };
 

@@ -48,9 +48,9 @@ exports.votePost = async (req, res, next) => {
     const user = await Account.findOne({ username: post.username });
 
     if (isUpvote == true) {
-      await user.upvote();
+      await user.upvote(postId);
     } else {
-      await user.downvote();
+      await user.downvote(postId);
     }
 
     return res.status(200).json({ message: "Success!" });

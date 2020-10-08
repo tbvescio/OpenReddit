@@ -12,7 +12,7 @@ export default function Error() {
       <Typography variant="h2" gutterBottom>
         Looks like something happened!
       </Typography>
-      <Button variant="contained" onClick={() => history.push("/")}>
+      <Button variant="contained" name="homepage" onClick={() => history.push("/")}>
         Go to home page
       </Button>
     </div>
