@@ -122,6 +122,7 @@ export default function PrimarySearchAppBar() {
   const handleSignOut = () => {
     dispatch(signOut());
     handleMenuClose();
+    history.go(0);
   };
 
   const handleProfileClick = () => {

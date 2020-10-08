@@ -36,6 +36,7 @@ export default function Singlepost(props) {
           headers: { Authorization: "Bearer " + authState.token },
         };
         await axios.post("/create-comment", dataRequest, config);
+        history.go(0)
       } else {
         setErrorMessage("You must be logged to do that!");
       }

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Paper } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 import Navbar from "./components/Navbar/Navbar";
 import AuthForm from "./components/AuthForm/AuthForm";
@@ -14,7 +14,7 @@ import Error from "./pages/Error/Error";
 import SearchResult from "./pages/SearchResult/SearchResult";
 
 function App() {
-  const themeState = useSelector(state => state.theme);
+  const themeState = useSelector((state) => state.theme);
   const theme = createMuiTheme({
     palette: {
       type: themeState,
@@ -24,7 +24,7 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <Paper elevation={0} style={{minHeight: "100vh"}}>
+        <Paper elevation={0} style={{ minHeight: "100vh" }}>
           <Navbar />
           <Switch>
             <Route path="/" exact component={Frontpage} />

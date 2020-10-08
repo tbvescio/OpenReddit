@@ -67,6 +67,7 @@ export default function Post(props) {
           },
         };
         await axios.put("/vote-post", data, config);
+        history.go(0)
       } catch (error) {
         history.push("/error");
       }
@@ -82,7 +83,7 @@ export default function Post(props) {
   return (
     <Grid item md={4} className={classes.item}>
       {redirectToPost && <Redirect to={redirectToPost} />}
-      <Card className={classes.root} variant="outlined">
+      <Card className={classes.root} >
         <Grid container>
           <Grid item xs={1} className={classes.voting}>
             <IconButton

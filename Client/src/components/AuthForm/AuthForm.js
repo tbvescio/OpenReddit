@@ -102,7 +102,7 @@ export default function LoginForm() {
       {redirectToHome && <Redirect to="" />}
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4">
           {isSignUp ? "Sign Up" : "Sign in"}
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
