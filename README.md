@@ -54,3 +54,12 @@ $ npm start
 | /api/delete-post | DELETE |postId|*auth |
 
  *auth endpoints needs JWT token in Authorization header with this format: bearer (token) 
+ 
+ ### TODO
+ -Bug infinite votes
+ -Image post feature
+ -Url post feature
+ -Client test
+ -Backend test
+ 
+ 
