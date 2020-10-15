@@ -118,7 +118,7 @@ export default function Singlepost(props) {
                 <Button
                   size="medium"
                   variant="outlined"
-                  name="createSubreddit"
+                  aria-label="create subreddit" 
                   onClick={handleOpen}
                 >
                   Create Subreddit
@@ -159,10 +159,10 @@ export default function Singlepost(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} name="cancel" color="primary">
+          <Button onClick={handleClose} aria-label="cancel action"  color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} name="submit" color="primary">
+          <Button onClick={handleSubmit} aria-label="submit form"  color="primary">
             Submit
           </Button>
         </DialogActions>

@@ -171,7 +171,7 @@ export default function Singlepost(props) {
               </Typography>
             </CardContent>
             <CardActions className={classes.center}>
-              <Button size="medium" variant="outlined" name="createPost" onClick={handleOpen}>
+              <Button size="medium" variant="outlined" aria-label="create post"  onClick={handleOpen}>
                 Create Post
               </Button>
               {authState.isLogged && (
@@ -181,7 +181,7 @@ export default function Singlepost(props) {
                       size="medium"
                       variant="outlined"
                       onClick={handleUnSuscribe}
-                      name="unsuscribe"
+                      aria-label="unsuscribe from subreddit" 
                     >
                       Unsuscribe
                     </Button>
@@ -190,7 +190,7 @@ export default function Singlepost(props) {
                       size="medium"
                       variant="outlined"
                       onClick={handleSuscribe}
-                      name="suscribe"
+                      aria-label="suscribe to subreddit" 
                     >
                       Suscribe
                     </Button>
@@ -234,10 +234,10 @@ export default function Singlepost(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" name="cancel">
+          <Button onClick={handleClose} color="primary" aria-label="cancel action" >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary" name="submit">
+          <Button onClick={handleSubmit} color="primary" aria-label="submit action" >
             Submit
           </Button>
         </DialogActions>

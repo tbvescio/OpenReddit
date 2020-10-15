@@ -21,7 +21,7 @@ exports.createPost = async (req, res, next) => {
       { $push: { posts: post } }
     );
 
-    return res.status(200).json({ message: "Success!" });
+    return res.status(201).json({ message: "Success!" });
     
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
@@ -130,6 +130,9 @@ exports.deletePost = async (req, res, next) => {
     const postId = req.body.postId;
 
     const post = await Post.findOne({ _id: postId }).select("username");
+    if(!post){
+      return res.status(404).json({ message: "post dont found" });
+    }
     if (post.username === username) {
       await Post.deleteOne({ _id: postId });
       //removes post from user posts

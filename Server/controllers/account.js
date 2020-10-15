@@ -1,11 +1,11 @@
-const createError = require('http-errors')
+const createError = require("http-errors");
 
 const Account = require("../models/account");
 const Subreddit = require("../models/subreddit");
 
 exports.getUserProfile = async (req, res, next) => {
   try {
-    const {username} = req.params;
+    const { username } = req.params;
 
     const user = await Account.findOne({ username: username });
 
@@ -19,7 +19,6 @@ exports.getUserProfile = async (req, res, next) => {
       posts: user.posts,
       created_date: user.created_date,
     });
-    
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
   }
@@ -27,7 +26,7 @@ exports.getUserProfile = async (req, res, next) => {
 
 exports.suscribe = async (req, res, next) => {
   try {
-    const {subreddit} = req.params;
+    const { subreddit } = req.params;
 
     const result = await Subreddit.findOne({ name: subreddit });
 
@@ -50,7 +49,7 @@ exports.suscribe = async (req, res, next) => {
 
 exports.unSuscribe = async (req, res, next) => {
   try {
-    const {subreddit} = req.params;
+    const { subreddit } = req.params;
 
     const result = await Subreddit.findOne({ name: subreddit });
 
@@ -73,7 +72,7 @@ exports.unSuscribe = async (req, res, next) => {
 
 exports.isSuscribed = async (req, res, next) => {
   try {
-    const {subreddit, username} = req.params;
+    const { subreddit, username } = req.params;
 
     const fetchedUser = await Account.findOne({ username: username });
 
@@ -88,12 +87,12 @@ exports.isSuscribed = async (req, res, next) => {
     fetchedUser.suscribed.forEach((sub) => {
       if (sub === subreddit) {
         result = true;
-      }else{
+      } else {
         result = false;
       }
     });
 
-    return res.status(200).json({ message: "Success!", "isSuscribed": result });
+    return res.status(200).json({ message: "Success!", isSuscribed: result });
   } catch (error) {
     return next(createError(error.statusCode || 500, error));
   }

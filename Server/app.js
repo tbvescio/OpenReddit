@@ -2,18 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
-
-//ROUTES CONTROLLERS
-const authRoutes = require("./routes/auth");
-const subredditRoutes = require("./routes/subreddit");
-const accountRoutes = require("./routes/account");
-const postRoutes = require("./routes/post");
-const searchRoutes = require("./routes/search");
-
-
+const routes = require("./routes");
 const app = express();
 
 app.use(bodyParser.json());
@@ -29,23 +21,18 @@ app.use((req, res, next) => {
   next();
 });
 
-
-//ROUTES
-app.use("/api/", subredditRoutes);
-app.use("/api/", accountRoutes);
-app.use("/api/", postRoutes);
-app.use("/api/", searchRoutes);
-app.use("/api/auth", authRoutes);
-
+app.use("/", routes);
 
 mongoose
-  .connect(
-    process.env.MONGO_URL,
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
-  )
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
   .then(() => {
     app.listen(process.env.PORT);
-    console.log("**SERVER ON " + process.env.PORT + "**")
+    console.log("started at", process.env.PORT);
+    app.emit("started"); // for tests
   })
   .catch((err) => console.log(err));
 

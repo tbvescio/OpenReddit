@@ -151,7 +151,7 @@ export default function LoginForm() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            name="submit"
+            aria-label="Go to auth page"
           >
             {isSignUp ? "Sign Up" : "Sign in"}
           </Button>

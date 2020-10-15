@@ -129,7 +129,7 @@ export default function Post(props) {
             <CardActions>
               <Button
                 size="small"
-                name="comments"
+                aria-label="see comments" 
                 onClick={commentClickHandler}
               >
                 Comments

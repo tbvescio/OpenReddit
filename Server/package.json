@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
@@ -17,8 +18,10 @@
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
     "http-errors": "^1.8.0",
+    "jest": "^26.5.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.25"
+    "mongoose": "^5.9.25",
+    "supertest": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

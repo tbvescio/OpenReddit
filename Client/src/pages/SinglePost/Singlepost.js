@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Post from "../../components/Post/Post";
 import Comment from "../../components/Comment/Comment";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, CircularProgress } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 export default function Singlepost(props) {
   const { subreddit, postId } = props.match.params;
-  const [data, setData] = useState({ post: null, comments: null });
+  const [data, setData] = useState({
+    post: null,
+    comments: null,
+    loaded: false,
+  });
   const [textInput, setTextInput] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const authState = useSelector((state) => state.auth);
@@ -34,7 +38,7 @@ export default function Singlepost(props) {
           );
         });
 
-        return setData({ post: post, comments: post_comments });
+        return setData({ post: post, comments: post_comments, loaded: true });
       } catch (error) {
         history.push("/error");
       }
@@ -67,7 +71,11 @@ export default function Singlepost(props) {
   return (
     <div>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-
+      {!data.loaded && (
+        <CircularProgress
+          style={{ marginLeft: "50%", marginTop: "15%", position: "relative" }}
+        />
+      )}
       {data.post && (
         <Post
           postId={data.post._id}
@@ -90,7 +98,13 @@ export default function Singlepost(props) {
               fullWidth
               onChange={(e) => setTextInput(e.target.value)}
             />
-            <Button variant="contained" color="primary" type="submit"  name="submit" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              aria-label="submit comment" 
+              fullWidth
+            >
               Submit
             </Button>
           </form>
